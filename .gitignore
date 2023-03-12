@@ -127,4 +127,4 @@ dist
 .pnp.*
 
 # ignore the uploads folder inside /server
-/server/uploads
+server/uploads
