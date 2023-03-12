@@ -9,6 +9,6 @@ const multer = require('multer')(options);
 
 router.post('/upload', multer.any(), fileService.uploadFile);
 
-// router.delete('/files/:id', fileService.deleteFile);
+router.delete('/files/:id', fileService.deleteFile);
 
 module.exports = router;

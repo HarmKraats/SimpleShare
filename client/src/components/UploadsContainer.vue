@@ -75,12 +75,18 @@ export default {
         })
         .then(response => {
           if (response.status >= 200 && response.status < 300) {
-            this.updateFilesList(response.data)
             this.$set(this, 'formData', null)
-            alert('File uploaded successfully')
           } else {
             alert('File not uploaded. Please check the file types' + response)
           }
+
+          console.log(response)
+          // wait for 2 seconds and then update the files list
+          setTimeout(() => {
+            this.updateFilesList(response.data)
+            console.log('Files list updated with: ' + response.data)
+          }, 2000)
+          // this.updateFilesList(response.data)
         })
         .catch((e) => {
           alert('Error occured' + e)
@@ -91,6 +97,15 @@ export default {
     },
     updateFilesList (files) {
       this.$emit('filesUploaded', files)
+      if (this.$listeners['filesUploaded']) {
+        // parent component is listening for the 'filesUploaded' event
+        // add your code here
+        console.log('Parent component is listening for the filesUploaded event')
+      } else {
+        // parent component is not listening for the 'filesUploaded' event
+        // add your code here
+        console.log('Parent component is not listening for the filesUploaded event')
+      }
     }
   }
 }

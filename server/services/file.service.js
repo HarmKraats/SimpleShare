@@ -13,15 +13,6 @@ mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 
 module.exports = {
-    // getAll: (req, res, next) => {
-    //     File.find((err, files) => {
-    //         if (err) {
-    //             return res.status(404).end();
-    //         }
-    //         console.log('File fetched successfully');
-    //         res.send(files);
-    //     });
-    // },
     getAll: (req, res, next) => {
         File.find().exec()
             .then(files => {
@@ -39,24 +30,6 @@ module.exports = {
             let fileModel = new File({
                 name: file.filename
             });
-            // fileModel.save((err) => {
-            //     if (err) {
-            //         return next('Error creating new file', err);
-            //     }
-
-            //     fileModel.encodedName = btoa(fileModel._id)
-            //     fileModel.save((err) => {
-            //         if (err) {
-            //             return next('Error creating new file', err);
-            //         }
-
-            //         savedModels.push(fileModel)
-
-            //         callback()
-            //         console.log('File created successfully');
-            //     })
-
-            // });
             fileModel.save()
                 .then((savedFileModel) => {
                     savedFileModel.encodedName = btoa(savedFileModel._id);
@@ -101,52 +74,48 @@ module.exports = {
         }
     },
     downloadFile(req, res, next) {
-        File.findOne({ name: req.params.name }, (err, file) => {
-            if (err) {
-                res.status(400).end();
-            }
-
-            if (!file) {
-                File.findOne({ encodedName: req.params.name }, (err, file) => {
+        File.findOne({ name: req.params.name })
+            .then((file) => {
+                if (!file) {
+                    return File.findOne({ encodedName: req.params.name });
+                }
+                return file;
+            })
+            .then((file) => {
+                if (!file) {
+                    return res.status(404).end();
+                }
+                let fileLocation = path.join(__dirname, '..', 'uploads', file.name);
+                res.download(fileLocation, (err) => {
                     if (err) {
                         res.status(400).end();
                     }
-
-                    if (!file) {
-                        res.status(404).end();
-                    }
-
-                    let fileLocation = path.join(__dirname, '..', 'uploads', file.name)
-
-                    res.download(fileLocation, (err) => {
-                        if (err) {
-                            res.status(400).end();
-                        }
-                    })
-                })
-            }
-        })
+                });
+            })
+            .catch((err) => {
+                res.status(400).end();
+            });
     },
     deleteFile(req, res, next) {
-        File.findOne({ id: req.params._id }, (err, file) => {
-            if (err) {
-                res.status(400).end();
-            }
-
+        File.findOne({ id: req.params._id })
+          .then((file) => {
             if (!file) {
-                res.status(404).end();
+              return res.status(404).end();
             }
-
-            let fileLocation = path.join(__dirname, '..', 'uploads', file.name)
+      
+            let fileLocation = path.join(__dirname, '..', 'uploads', file.name);
             fs.unlink(fileLocation, () => {
-                File.deleteOne(file, (err) => {
-                    if (err) {
-                        return next(err)
-                    }
-
-                    return res.send([])
+              File.deleteOne(file)
+                .then(() => {
+                  return res.send([]);
                 })
-            })
-        })
-    },
+                .catch((err) => {
+                  return next(err);
+                });
+            });
+          })
+          .catch((err) => {
+            return res.status(400).end();
+          });
+      }
 }

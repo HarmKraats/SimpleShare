@@ -6,8 +6,9 @@
     <ul>
       <uploaded-file
         v-for="file in files"
-        v-bind:key="file.id"
+        v-bind:key="file._id"
         v-bind:file.sync="file"
+        v-on:delete-file="deleteFile"
       ></uploaded-file>
     </ul>
   </div>
@@ -34,10 +35,24 @@ export default {
       })
     },
 
-    filesUplaoded (files) {
+    filesUploaded (files) {
       files.forEach(file => {
         this.files.push(file)
+        console.log('Files uploaded: ' + file)
       })
+    },
+
+    deleteFile (file) {
+      if (confirm('Are you sure you want to delete this file?')) {
+        axios.delete('/api/files/' + file._id)
+          .then(() => {
+            let fileIndex = this.files.indexOf(file)
+            this.files.splice(fileIndex, 1)
+          })
+          .catch(error => {
+            console.log('Error deleting file ' + error)
+          })
+      }
     }
   },
   mounted () {

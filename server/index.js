@@ -9,3 +9,6 @@ app.listen(3000, () => {
 app.use(bodyParser.json())
 const apiRoutes = require('./routes/api');
 app.use('/api', apiRoutes);
+
+const fileRoute = require('./routes/file');
+app.use('/file', fileRoute);

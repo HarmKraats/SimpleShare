@@ -28,9 +28,19 @@ export default {
     UploadedFiles,
     UploadsContainer
   },
+  computed: {
+    filesList: {
+      get () {
+        return this.$refs.filesList.files
+      },
+      set (files) {
+        this.$refs.filesList.files = files
+      }
+    }
+  },
   methods: {
     filesUploaded (files) {
-      this.$refs.filesList.filesUploaded(files)
+      this.filesList = files
     }
   }
 }
