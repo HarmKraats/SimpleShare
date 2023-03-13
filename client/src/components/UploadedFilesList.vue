@@ -56,6 +56,7 @@ export default {
       }
     }
   },
+
   mounted () {
     this.fetchFiles()
   }

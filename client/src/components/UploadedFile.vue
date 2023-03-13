@@ -1,10 +1,8 @@
 <template>
   <div>
-    <div>
-      <a v-bind:href="'/file/download/' + file.encodedName" v-on:click="downloadFile">{{ file.name }}</a>
       <button v-on:click="deleteFile(file)">Delete</button>
+      <a v-bind:href="'/file/download/' + file.encodedName" v-on:click="downloadFile">{{ file.name }}</a>
       <file-downloader :key="downloadKey" ref="downloader"></file-downloader>
-    </div>
   </div>
 </template>
 
@@ -43,4 +41,11 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+  div{
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px 0;
+    min-width: 50vw;
+  }
+</style>

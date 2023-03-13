@@ -4,14 +4,14 @@
 
     <div class="upload-erea">
 
-      <div>
-        <input
-        type="file"
-        v-show="!uploadStarted"
-        multiple
-        v-bind:name="uploadName"
-        @change="fileSelected"
-        />
+        <div class="uploader">
+          <input
+          type="file"
+          v-show="!uploadStarted"
+          multiple
+          v-bind:name="uploadName"
+          @change="fileSelected"
+          />
         <p v-show="uploadStarted">Uploading...</p>
       </div>
       <div class="buttons">
@@ -66,6 +66,7 @@ export default {
       }
       this.$set(this, 'uploadStarted', false)
     },
+
     uploadData (formData) {
       if (this.formData === null) {
         return
@@ -89,6 +90,7 @@ export default {
           this.$set(this, 'uploadStarted', false)
         })
     },
+
     updateFilesList (files) {
       this.$emit('files-uploaded', files)
     }

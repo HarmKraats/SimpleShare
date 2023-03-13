@@ -52,6 +52,11 @@ export default {
   align-items: center;
   flex-direction: column;
 }
+h1,
+h2,
+p {
+  margin-bottom: 10px;
+}
 h2 {
   font-weight: normal;
 }
@@ -77,5 +82,6 @@ button{
   border-radius: 999px;
   cursor: pointer;
   font-weight: bold;
+  margin: 10px 0;
 }
 </style>
