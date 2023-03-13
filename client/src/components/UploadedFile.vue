@@ -2,7 +2,7 @@
   <div>
     <div>
       <a v-bind:href="'/file/download/' + file.encodedName" v-on:click="downloadFile">{{ file.name }}</a>
-      <button v-on:click="deleteFile(file)">Delete me</button>
+      <button v-on:click="deleteFile(file)">Delete</button>
       <file-downloader :key="downloadKey" ref="downloader"></file-downloader>
     </div>
   </div>

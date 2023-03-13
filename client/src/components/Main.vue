@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <h1>Anonymous File Uploader System</h1>
+    <div class="main">
+        <h1>SimpleShare</h1>
         <div>
             <uploads-container
                 v-on:files-uploaded="filesUploaded"></uploads-container>
@@ -46,8 +46,12 @@ export default {
 }
 </script>
 
-<style scoped>
-h1,
+<style>
+.main{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
 h2 {
   font-weight: normal;
 }
@@ -60,6 +64,18 @@ li {
   margin: 0 10px;
 }
 a {
-  color: #42b983;
+  color: #338e65;
+  text-decoration: none;
+}
+
+button{
+  outline: transparent;
+  border: none;
+  background-color: #8a66e4;
+  color: #fff;
+  padding: .5rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: bold;
 }
 </style>

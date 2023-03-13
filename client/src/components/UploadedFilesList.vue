@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <h1>Files List</h1>
+    <h2>Files List</h2>
 
     <ul>
       <uploaded-file
@@ -36,6 +36,7 @@ export default {
     },
 
     filesUploaded (files) {
+      console.log('Files uploaded banana boy: ' + files)
       files.forEach(file => {
         this.files.push(file)
         console.log('Files uploaded: ' + file)

@@ -1,26 +1,27 @@
 <template>
-  <div class="hello">
-    <h1>Uploader</h1>
+  <div>
+    <h3>Upload your files here</h3>
 
-    <div>
-      <input
+    <div class="upload-erea">
+
+      <div>
+        <input
         type="file"
         v-show="!uploadStarted"
         multiple
         v-bind:name="uploadName"
         @change="fileSelected"
-      />
-
-      <p v-show="uploadStarted">Uploading...</p>
-    </div>
-
-    <div>
-      <button v-show="!uploadStarted" v-on:click="startUpload">
-        Start upload
-      </button>
-      <button v-show="uploadStarted" v-on:click="cancelUpload">
-        Cancel upload
-      </button>
+        />
+        <p v-show="uploadStarted">Uploading...</p>
+      </div>
+      <div class="buttons">
+        <button v-show="!uploadStarted" v-on:click="startUpload">
+          Start upload
+        </button>
+        <button v-show="uploadStarted" v-on:click="cancelUpload">
+          Cancel upload
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -75,18 +76,11 @@ export default {
         })
         .then(response => {
           if (response.status >= 200 && response.status < 300) {
+            this.updateFilesList(response.data)
             this.$set(this, 'formData', null)
           } else {
             alert('File not uploaded. Please check the file types' + response)
           }
-
-          console.log(response)
-          // wait for 2 seconds and then update the files list
-          setTimeout(() => {
-            this.updateFilesList(response.data)
-            console.log('Files list updated with: ' + response.data)
-          }, 2000)
-          // this.updateFilesList(response.data)
         })
         .catch((e) => {
           alert('Error occured' + e)
@@ -96,19 +90,25 @@ export default {
         })
     },
     updateFilesList (files) {
-      this.$emit('filesUploaded', files)
-      if (this.$listeners['filesUploaded']) {
-        // parent component is listening for the 'filesUploaded' event
-        // add your code here
-        console.log('Parent component is listening for the filesUploaded event')
-      } else {
-        // parent component is not listening for the 'filesUploaded' event
-        // add your code here
-        console.log('Parent component is not listening for the filesUploaded event')
-      }
+      this.$emit('files-uploaded', files)
     }
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+  .buttons{
+    margin-top: 10px;
+  }
+
+  input {
+    border: none;
+    outline: transparent;
+  }
+
+  .upload-erea{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start
+  }
+</style>
