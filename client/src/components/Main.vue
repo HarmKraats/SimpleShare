@@ -1,6 +1,5 @@
 <template>
     <div class="main">
-        <h1>SimpleShare</h1>
         <div>
             <uploads-container
                 v-on:files-uploaded="filesUploaded"></uploads-container>
@@ -26,7 +25,7 @@ export default {
   },
   components: {
     UploadedFiles,
-    UploadsContainer
+    UploadsContainer,
   },
   computed: {
     filesList: {
@@ -48,6 +47,9 @@ export default {
 </script>
 
 <style>
+body{
+  overflow-x: hidden;
+}
 .main{
   display: flex;
   align-items: center;
