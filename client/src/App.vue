@@ -13,9 +13,6 @@
           </g>
         </g>
       </svg>
-
-
-
     </div>
     <router-view />
   </div>
