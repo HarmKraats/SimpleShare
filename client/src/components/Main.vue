@@ -40,7 +40,8 @@ export default {
   },
   methods: {
     filesUploaded (files) {
-      this.filesList = files
+      // this.filesList = files \\This does not work
+      this.$refs.filesList.filesUploaded(files)
     }
   }
 }

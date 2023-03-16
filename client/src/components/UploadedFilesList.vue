@@ -36,7 +36,6 @@ export default {
     },
 
     filesUploaded (files) {
-      console.log('Files uploaded banana boy: ' + files)
       files.forEach(file => {
         this.files.push(file)
         console.log('Files uploaded: ' + file)
