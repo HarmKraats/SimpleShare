@@ -31,7 +31,6 @@ export default {
   padding-bottom: var(--footer-height);
 }
 
-
 *{
   margin: 0;
   padding: 0;

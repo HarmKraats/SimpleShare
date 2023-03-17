@@ -21,10 +21,9 @@
 
 <script>
 export default {
-    name: 'HeaderContainer'
+  name: 'HeaderContainer'
 }
 </script>
-
 
 <style scoped>
 .header{

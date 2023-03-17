@@ -25,7 +25,7 @@ export default {
   },
   components: {
     UploadedFiles,
-    UploadsContainer,
+    UploadsContainer
   },
   computed: {
     filesList: {
