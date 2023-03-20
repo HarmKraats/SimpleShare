@@ -6,7 +6,7 @@
     <ul>
       <uploaded-file
         v-for="file in files"
-        v-bind:key="file._id"
+        v-bind:key="file.id"
         v-bind:file.sync="file"
         v-on:delete-file="deleteFile"
       ></uploaded-file>
@@ -30,7 +30,8 @@ export default {
   },
   methods: {
     fetchFiles () {
-      axios.get('/api/files').then(response => {
+      axios.get('/api.php?action=getFiles').then(response => {
+        console.log(response.data)
         this.$set(this, 'files', response.data)
       })
     },
@@ -44,7 +45,7 @@ export default {
 
     deleteFile (file) {
       if (confirm('Are you sure you want to delete this file?')) {
-        axios.delete('/api/files/' + file._id)
+        axios.delete('/api/files/' + file.id)
           .then(() => {
             let fileIndex = this.files.indexOf(file)
             this.files.splice(fileIndex, 1)

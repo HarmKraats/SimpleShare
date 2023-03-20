@@ -11,8 +11,10 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': 'http://localhost:3000',
-      '/file': 'http://localhost:3000'
+      '/api': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/api.php',
+      '/file': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/api.php'
+      // '/api': 'http://localhost:3000',
+      // '/file': 'http://localhost:3000'
     },
 
     // Various Dev Server settings
@@ -26,7 +28,7 @@ module.exports = {
     // Use Eslint Loader?
     // If true, your code will be linted during bundling and
     // linting errors and warnings will be shown in the console.
-    useEslint: true,
+    useEslint: false,
     // If true, eslint errors and warnings will also be shown in the error overlay
     // in the browser.
     showEslintErrorsInOverlay: false,
