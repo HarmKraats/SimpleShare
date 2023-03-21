@@ -49,3 +49,35 @@ function getFromDB($what = "*", $table = "users", $where = "1", $debug = false)
         echo 'Database gegevens ophalen error: ' . $e->getMessage();
     }
 }
+
+
+
+function saveFileModel($fileModel)
+{
+    $pdo = getDB();
+
+    $fileName = $fileModel->name;
+
+    try {
+        $stmt = $pdo->prepare("INSERT INTO files (name) VALUES (:name)");
+        $stmt->bindParam(':name', $fileName);
+        $stmt->execute();
+
+        $id = $pdo->lastInsertId();
+
+        $savedFileModel = new stdClass();
+        $savedFileModel->_id = $id;
+        $savedFileModel->name = $fileName;
+
+        // insert the encodedName into the database, it is encoded with btoa
+        $encodedName = md5($id);
+        $stmt = $pdo->prepare("UPDATE files SET encodedName = :encodedName WHERE id = :id");
+        $stmt->bindParam(':encodedName', $encodedName);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+
+        return $savedFileModel;
+    } catch (PDOException $e) {
+        return false;
+    }
+}

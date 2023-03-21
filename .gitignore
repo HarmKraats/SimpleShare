@@ -128,4 +128,5 @@ dist
 
 # ignore the uploads folder inside /server
 server/uploads
+new-server/uploads
 zababa.txt

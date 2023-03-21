@@ -36,7 +36,7 @@ export default {
     return {
       uploadStarted: false,
       uploadName: 'files',
-      uploadUrl: '/api/upload',
+      uploadUrl: 'api.php?action=uploadFile',
       formData: null
     }
   },
@@ -52,6 +52,7 @@ export default {
       for (let index = 0; index < files.length; index++) {
         formData.append(name, files[index], files[index].name)
       }
+
       this.$set(this, 'formData', formData)
     },
 
@@ -72,10 +73,11 @@ export default {
         return
       }
       axios
-        .post(this.uploadUrl, formData, {
+        .post(this.uploadUrl, this.formData, {
           cancelToken: source.token
         })
         .then(response => {
+          console.log(response)
           if (response.status >= 200 && response.status < 300) {
             this.updateFilesList(response.data)
             this.$set(this, 'formData', null)

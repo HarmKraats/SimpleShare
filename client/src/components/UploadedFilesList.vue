@@ -31,7 +31,7 @@ export default {
   methods: {
     fetchFiles () {
       axios.get('/api.php?action=getFiles').then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.$set(this, 'files', response.data)
       })
     },
