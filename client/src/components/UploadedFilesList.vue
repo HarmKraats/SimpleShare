@@ -11,6 +11,8 @@
         v-on:delete-file="deleteFile"
       ></uploaded-file>
     </ul>
+
+    <div v-show="anyFiles">No files are uploaded yet!</div>
   </div>
 </template>
 
@@ -22,7 +24,8 @@ export default {
   name: 'UploadedFilesList',
   data () {
     return {
-      files: []
+      files: [],
+      anyFiles: true
     }
   },
   components: {
@@ -33,6 +36,10 @@ export default {
       axios.get('/api.php?action=getFiles').then(response => {
         // console.log(response.data)
         this.$set(this, 'files', response.data)
+        
+        if (this.files.length > 0) {
+          this.$set(this, 'anyFiles', false)
+        }
       })
     },
 
