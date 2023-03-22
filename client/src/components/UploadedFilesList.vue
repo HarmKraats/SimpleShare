@@ -37,18 +37,17 @@ export default {
     },
 
     filesUploaded (files) {
-      files.forEach(file => {
-        this.files.push(file)
-        console.log('Files uploaded: ' + file)
-      })
+      this.fetchFiles()
     },
 
     deleteFile (file) {
       if (confirm('Are you sure you want to delete this file?')) {
-        axios.delete('/api/files/' + file.id)
-          .then(() => {
+        axios.delete('/api.php?action=deleteFile&id=' + file.id)
+          .then((response) => {
             let fileIndex = this.files.indexOf(file)
             this.files.splice(fileIndex, 1)
+            // console.log(response);
+            
           })
           .catch(error => {
             console.log('Error deleting file ' + error)

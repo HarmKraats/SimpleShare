@@ -35,10 +35,10 @@ function getFromDB($what = "*", $table = "users", $where = "1", $debug = false)
 
         // query
         $sql = "SELECT $what FROM $table WHERE $where";
-        if($debug){
+        if ($debug) {
             echo $sql;
         }
-        
+
         // prepare and execute query. Then fetch all the results and retype them as an array
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -80,4 +80,39 @@ function saveFileModel($fileModel)
     } catch (PDOException $e) {
         return false;
     }
+}
+
+function deleteFile($file_id)
+{
+    // Get file record from the database
+    $file = getFromDB('*', 'files', 'id = ' . $file_id);
+    
+    // Check if file exists
+    if (!$file) {
+        return false;
+    }
+    
+    $pdo = getDB();
+    $stmt = $pdo->prepare('DELETE FROM files WHERE id = :id');
+    $stmt->bindParam(':id', $file_id);
+    $stmt->execute();
+
+
+    // Check if there are other records using this file
+    $stmt = $pdo->prepare('SELECT COUNT(*) AS count FROM files WHERE name = :name AND id != :id');
+    $stmt->bindParam(':name', $file['name']);
+    $stmt->bindParam(':id', $file['id']);
+    $stmt->execute();
+    $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+    // Delete file record from the database if no other records are using this file
+    if ($count === 0) {
+        // Delete file from the filesystem
+        $fileLocation = __DIR__ . '/../uploads/' . $file['name'];
+        if (file_exists($fileLocation)) {
+            unlink($fileLocation);
+        }
+    }
+
+    return true;
 }
