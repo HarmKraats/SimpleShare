@@ -32,7 +32,8 @@ export default {
       uploadStarted: false,
       uploadName: 'files',
       uploadUrl: 'api.php?action=uploadFile',
-      formData: null
+      formData: null,
+      files: []
     }
   },
   methods: {
@@ -46,7 +47,11 @@ export default {
       for (let index = 0; index < files.length; index++) {
         let key = 'file_' + index
         formData.append(key, files[index], files[index].name)
+        // make an array of all files
+        this.files.push(files[index])
       }
+
+      console.log(this.files)
 
       this.$set(this, 'formData', formData)
     },

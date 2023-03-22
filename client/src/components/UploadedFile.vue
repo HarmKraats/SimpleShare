@@ -2,7 +2,6 @@
   <div>
     <button v-on:click="deleteFile(file)">Delete</button>
     <a v-bind:href="'/file/download/' + file.encodedName" v-on:click.prevent="downloadFile(file)">{{ file.name }}</a>
-    
   </div>
 </template>
 <script>
