@@ -15,8 +15,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(getFromDB('*', 'files', '1'));
         exit;
     }
+
+    if ($_GET['action'] === 'downloadFile') {
+        if (!isset($_GET['encodedName'])) {
+            echo json_encode(['error' => 'No encodedName specified']);
+            exit;
+        }
+
+        $encodedName = $_GET['encodedName'];
+        $file = getFromDB('*', 'files', 'encodedName = "' . $encodedName . '"')[0];
+
+        if (!$file) {
+            echo json_encode(['error' => 'File not found']);
+            exit;
+        }
+
+        $filePath = 'uploads/' . $file['name'];
+
+        if (!file_exists($filePath)) {
+            echo json_encode(['error' => 'File not found']);
+            exit;
+        }
+
+        header('Content-Type: ' . mime_content_type($filePath));
+        header('Content-Disposition: attachment; filename="' . $file['name'] . '"');
+        header('Content-Length: ' . filesize($filePath));
+
+        readfile($filePath);
+        exit;
+    }
 }
 
+
+// Delete file
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     if (!isset($_GET['action'])) {
         echo json_encode(['error' => 'No action specified']);
@@ -63,6 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     }
 }
 
+
+// Upload file
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!isset($_GET['action'])) {

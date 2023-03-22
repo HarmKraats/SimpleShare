@@ -50,8 +50,6 @@ function getFromDB($what = "*", $table = "users", $where = "1", $debug = false)
     }
 }
 
-
-
 function saveFileModel($fileModel)
 {
     $pdo = getDB();
