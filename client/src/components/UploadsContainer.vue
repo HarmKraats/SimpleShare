@@ -4,14 +4,9 @@
 
     <div class="upload-erea">
 
-        <div class="uploader">
-          <input
-          type="file"
-          v-show="!uploadStarted"
-          multiple
-          v-bind:name="uploadName"
-          @change="fileSelected"
-          />
+      <div class="uploader">
+        <input type="file" v-show="!uploadStarted" multiple
+          v-bind:name="uploadName" @change="fileSelected" />
         <p v-show="uploadStarted">Uploading...</p>
       </div>
       <div class="buttons">
@@ -32,7 +27,7 @@ const CancelToken = axios.CancelToken
 const source = CancelToken.source()
 export default {
   name: 'Main',
-  data () {
+  data() {
     return {
       uploadStarted: false,
       uploadName: 'files',
@@ -46,11 +41,11 @@ export default {
         return
       }
       let files = event.target.files
-      let name = event.target.name
       let formData = new FormData()
 
       for (let index = 0; index < files.length; index++) {
-        formData.append(name, files[index], files[index].name)
+        let key = 'file_' + index
+        formData.append(key, files[index], files[index].name)
       }
 
       this.$set(this, 'formData', formData)
@@ -101,18 +96,18 @@ export default {
 </script>
 
 <style scoped>
-  .buttons{
-    margin-top: 10px;
-  }
+.buttons {
+  margin-top: 10px;
+}
 
-  input {
-    border: none;
-    outline: transparent;
-  }
+input {
+  border: none;
+  outline: transparent;
+}
 
-  .upload-erea{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start
-  }
+.upload-erea {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start
+}
 </style>

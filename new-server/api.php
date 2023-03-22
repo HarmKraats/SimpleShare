@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $savedModels = [];
 
-    var_dump($_FILES);
 
     // Loop through each uploaded file
     foreach ($_FILES as $file) {
