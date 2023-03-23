@@ -16,6 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 
+    // for getting the files from a shareList
+    if($_GET['action'] === 'shareList'){
+        $url = $_SERVER['REQUEST_URI'];
+
+        $lastPart = basename($url);
+
+        echo json_encode($lastPart);
+    }
+
+    // This is for downloading a file
     if ($_GET['action'] === 'downloadFile') {
         if (!isset($_GET['encodedName'])) {
             echo json_encode(['error' => 'No encodedName specified']);
@@ -109,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $savedModels = [];
-
+    $newShareList = newShareList();
 
     // Loop through each uploaded file
     foreach ($_FILES as $file) {
@@ -121,7 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileModel->name = $fileName;
 
         // Save the File object to the database
-        $savedFileModel = saveFileModel($fileModel);
+        // sharelist id
+        $shareListId = $newShareList->_id;
+        $savedFileModel = saveFileModel($fileModel, $shareListId);
 
         // If the File was saved successfully, add it to the savedModels array
         if ($savedFileModel) {

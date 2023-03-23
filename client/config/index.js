@@ -12,7 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/api.php',
-      '/file': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/services/file.php'
+      '/files': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/models/getFilesList.php',
+      // '/file': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/services/file.php',
       // '/api': 'http://localhost:3000',
       // '/file': 'http://localhost:3000'
     },

@@ -26,7 +26,7 @@ export default {
     },
     async downloadFile(file) {
       try {
-        const response = await fetch(`api.php?action=downloadFile&encodedName=${file.encodedName}`);
+        const response = await fetch(`/api?action=downloadFile&encodedName=${file.encodedName}`);
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');

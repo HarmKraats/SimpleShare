@@ -9,6 +9,11 @@ export default new Router({
       path: '/',
       name: 'Main',
       component: Main
-    }
+    },
+    {
+      path: '/files/:url',
+      name: 'FilesList',
+      component: () => import('@/components/FilesList')
+    },
   ]
 })

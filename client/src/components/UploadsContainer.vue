@@ -31,7 +31,7 @@ export default {
     return {
       uploadStarted: false,
       uploadName: 'files',
-      uploadUrl: 'api.php?action=uploadFile',
+      uploadUrl: '/api?action=uploadFile',
       formData: null,
       files: []
     }

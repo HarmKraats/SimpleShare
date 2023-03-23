@@ -50,15 +50,18 @@ function getFromDB($what = "*", $table = "users", $where = "1", $debug = false)
     }
 }
 
-function saveFileModel($fileModel)
+function saveFileModel($fileModel, $shareListId)
 {
     $pdo = getDB();
 
     $fileName = $fileModel->name;
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO files (name) VALUES (:name)");
+        $dateTime = date('Y-m-d H:i:s');
+        $stmt = $pdo->prepare("INSERT INTO files (name, share_list_id, uploaded) VALUES (:name, :share_list_id, :uploaded)");
         $stmt->bindParam(':name', $fileName);
+        $stmt->bindParam(':share_list_id', $shareListId);
+        $stmt->bindParam(':uploaded', $dateTime);
         $stmt->execute();
 
         $id = $pdo->lastInsertId();
@@ -84,12 +87,12 @@ function deleteFile($file_id)
 {
     // Get file record from the database
     $file = getFromDB('*', 'files', 'id = ' . $file_id);
-    
+
     // Check if file exists
     if (!$file) {
         return false;
     }
-    
+
     $pdo = getDB();
     $stmt = $pdo->prepare('DELETE FROM files WHERE id = :id');
     $stmt->bindParam(':id', $file_id);
@@ -113,4 +116,52 @@ function deleteFile($file_id)
     }
 
     return true;
+}
+
+function generateUniqueUrl($length = 8)
+{
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $url = '';
+    do {
+        // Generate a random URL
+        for ($i = 0; $i < $length; $i++) {
+            $url .= $characters[rand(0, strlen($characters) - 1)];
+        }
+
+        // Check if URL is already used in the database
+        $existingUrls = getFromDB('url', 'shareList', "url = '$url'");
+        $urlExists = !empty($existingUrls);
+
+        // If URL is already used, generate a new one and try again
+        if ($urlExists) {
+            $url = '';
+        }
+    } while ($urlExists);
+
+    return $url;
+}
+
+
+
+function newShareList()
+{
+
+    // generate a random string
+    $url = generateUniqueUrl();
+
+    // insert the string into the database
+    $pdo = getDB();
+    $stmt = $pdo->prepare("INSERT INTO shareList (url) VALUES (:url)");
+    $stmt->bindParam(':url', $url);
+    $stmt->execute();
+
+    // get the id of the inserted record
+    $id = $pdo->lastInsertId();
+
+    // return the id and the url
+    $shareList = new stdClass();
+    $shareList->_id = $id;
+    $shareList->url = $url;
+
+    return $shareList;
 }
