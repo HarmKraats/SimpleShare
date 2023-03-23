@@ -13,6 +13,7 @@ export default {
 <style scoped>
 .footer{
     width: 100vw;
+    
     background-color: #1e1e1e;
     color: #fff;
     text-align: center;

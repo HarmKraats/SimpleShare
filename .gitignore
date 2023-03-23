@@ -129,4 +129,8 @@ dist
 # ignore the uploads folder inside /server
 server/uploads
 new-server/uploads
+client/config/index.js
 zababa.txt
+client\config\index.js
+client/config/index.js
+client/config/index.js

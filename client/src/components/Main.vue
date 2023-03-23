@@ -47,44 +47,11 @@ export default {
 </script>
 
 <style>
-body{
-  overflow-x: hidden;
-}
+
 .main{
   display: flex;
   align-items: center;
   flex-direction: column;
 }
-h1,
-h2,
-p {
-  margin-bottom: 10px;
-}
-h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #338e65;
-  text-decoration: none;
-}
 
-button{
-  outline: transparent;
-  border: none;
-  background-color: #8a66e4;
-  color: #fff;
-  padding: .5rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: bold;
-  margin: 10px 0;
-}
 </style>

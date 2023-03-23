@@ -35,6 +35,8 @@ export default {
     width: 100vw;
     gap: 2rem;
     margin-bottom: 2rem;
+
+ 
 }
 
 h1{

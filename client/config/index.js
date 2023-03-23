@@ -11,8 +11,10 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/api.php',
-      '/files': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/models/getFilesList.php',
+      '/api': 'http://localhost/4-leerjaar-3/tests/1-SimpleShare/SimpleShare/new-server/api.php',
+      '/files': 'http://localhost/4-leerjaar-3/tests/1-SimpleShare/SimpleShare/new-server/models/getFilesList.php',
+      // '/api': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/api.php',
+      // '/files': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/models/getFilesList.php',
       // '/file': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/services/file.php',
       // '/api': 'http://localhost:3000',
       // '/file': 'http://localhost:3000'

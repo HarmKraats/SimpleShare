@@ -16,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 
-    // for getting the files from a shareList
-    if($_GET['action'] === 'shareList'){
-        $url = $_SERVER['REQUEST_URI'];
+    if ($_GET['action'] === 'getFilesList') {
+        $id = $_GET['id'];
+        $query = 'SELECT s.url FROM files f INNER JOIN sharelist s ON f.share_list_id = s.id WHERE f.id = 463';
+        $result = getFromDB('*', 'files f INNER JOIN sharelist s ON f.share_list_id = s.id', "f.id = $id");
 
-        $lastPart = basename($url);
-
-        echo json_encode($lastPart);
+        echo json_encode($result);
+        exit;
     }
 
     // This is for downloading a file
@@ -55,60 +55,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         header('Content-Length: ' . filesize($filePath));
 
         readfile($filePath);
+
+        exit;
+    }
+
+    if ($_GET['action'] === 'downloadSelected') {
+        if (!isset($_GET['url'])) {
+            echo json_encode(['error' => 'No url spec       ified']);
+            exit;
+        }
+
+        $url = $_GET['url'];
+        $files = getFromDB('*', 'files f INNER JOIN shareList s on f.share_list_id = s.id', "s.url = '$url'",true);
+        $fileFolder = $files[0]['url'];
+
+        $zip = new ZipArchive();
+        $zipName = "uploads/$fileFolder/$fileFolder.zip";
+
+        if ($zip->open($zipName, ZipArchive::CREATE) !== TRUE) {
+            exit("cannot open <$zipName>\n");
+        }
+
+        foreach ($files as $file) {
+            $filePath = "uploads/$fileFolder/" . $file['name'];
+            $zip->addFile($filePath, substr($filePath, strlen("uploads/$fileFolder/")));
+        }
+
+        $zip->close();
+
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="' . basename($zipName) . '"');
+        header('Content-Length: ' . filesize($zipName));
+
+        readfile($zipName);
         exit;
     }
 }
 
-
-// Delete file
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    if (!isset($_GET['action'])) {
-        echo json_encode(['error' => 'No action specified']);
-        exit;
-    }
-    // This is for deleting a file from the database
-    if ($_GET['action'] === 'deleteFile') {
-        if (!isset($_GET['id'])) {
-            echo json_encode(['error' => 'No id specified']);
-            exit;
-        }
-        $id = $_GET['id'];
-        $file = getFromDB('*', 'files', 'id = ' . $id)[0];
-
-        if (!$file) {
-            echo json_encode(['error' => 'File not found']);
-            exit;
-        }
-
-        $fileFolder = getFromDB('*', 'files f INNER JOIN shareList s on f.share_list_id = s.id', "f.id = '$id'");
-        $fileFolder = $fileFolder[0]['url'];
-
-
-        $pdo = getDB();
-        $count = getFromDB('COUNT(*) AS count', 'files', 'name = "' . $file['name'] . '" AND id != ' . $file['id'])[0]['count'];
-
-        if ($count == '0') {
-            $fileToDelete = "uploads/$fileFolder/" . $file['name'];
-
-            echo json_encode(['file path' => $fileToDelete]);
-
-            if (unlink($fileToDelete)) {
-                echo json_encode(['succes' => 'Deleted file']);
-            } else {
-                echo json_encode(['error' => 'Error deleting file ' . $file['name']]);
-            }
-            echo 'Deleted file ' . $file['name'];
-        }
-
-        // Delete the file
-        $stmt = $pdo->prepare('DELETE FROM files WHERE id = :id');
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-
-        echo json_encode(['success' => 'File deleted']);
-        exit;
-    }
-}
 
 
 // Upload file
@@ -126,8 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $savedModels = [];
     $newShareList = newShareList();
-    mkdir('uploads/'.$newShareList->url, 0777, true);
-    
+    mkdir('uploads/' . $newShareList->url, 0777, true);
+
 
 
     // Loop through each uploaded file
@@ -158,4 +141,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // If there were no errors, return the savedModels array as the response
     echo json_encode($savedModels);
+}
+
+
+// Delete file
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    if (!isset($_GET['action'])) {
+        echo json_encode(['error' => 'No action specified']);
+        exit;
+    }
+    // This is for deleting a file from the database
+    if ($_GET['action'] === 'deleteFile') {
+        if (!isset($_GET['id'])) {
+            echo json_encode(['error' => 'No id specified']);
+            exit;
+        }
+        $id = $_GET['id'];
+        $file = getFromDB('*', 'files', 'id = ' . $id)[0];
+
+        if (!$file) {
+            echo json_encode(['error' => 'File not found']);
+            exit;
+        }
+
+        $fileFolder = getFromDB('*', 'files f INNER JOIN shareList s on f.share_list_id = s.id', "f.id = '$id'");
+        $fileFolder = $fileFolder[0]['url'];
+
+
+        // $pdo = getDB();
+        // $count = getFromDB('COUNT(*) AS count', 'files', 'name = "' . $file['name'] . '" AND id != ' . $file['id'])[0]['count'];
+
+        // if ($count == '0') {
+        $fileToDelete = "uploads/$fileFolder/" . $file['name'];
+
+        echo json_encode(['file path' => $fileToDelete]);
+
+        if (unlink($fileToDelete)) {
+            echo json_encode(['succes' => 'Deleted file']);
+        } else {
+            echo json_encode(['error' => 'Error deleting file ' . $file['name']]);
+        }
+        echo 'Deleted file ' . $file['name'];
+        // }
+
+        // Delete the file
+        $pdo = getDB();
+        $stmt = $pdo->prepare('DELETE FROM files WHERE id = :id');
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+
+
+        // check if there are any files left in the folder
+        $files = scandir("uploads/$fileFolder");
+        // if there are no files left in the folder, delete the folder
+        if (count($files) == 2) {
+            rmdir("uploads/$fileFolder");
+            echo json_encode(['success' => 'Deleted main folder']);
+        }
+
+        exit;
+    }
 }

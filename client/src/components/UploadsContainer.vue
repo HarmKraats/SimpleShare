@@ -1,13 +1,14 @@
 <template>
   <div>
-    <h3>Upload your files here</h3>
+    <h3>Click here to upload</h3>
 
     <div class="upload-erea">
-
+      
       <div class="uploader">
-        <input type="file" v-show="!uploadStarted" multiple
-          v-bind:name="uploadName" @change="fileSelected" />
+        <input type="file" v-show="!uploadStarted" multiple 
+        v-bind:name="uploadName" @change="fileSelected" />
         <p v-show="uploadStarted">Uploading...</p>
+        <a target="_blank" v-show="showLink" v-bind:href="'/#/files/' + this.filesUrl" >http://localhost/#/files/{{ this.filesUrl }}</a>
       </div>
       <div class="buttons">
         <button v-show="!uploadStarted" v-on:click="startUpload">
@@ -33,14 +34,17 @@ export default {
       uploadName: 'files',
       uploadUrl: '/api?action=uploadFile',
       formData: null,
-      files: []
+      files: [],
+      filesUrl: '',
+      showLink: false
     }
   },
   methods: {
-    fileSelected (event) {
+    fileSelected(event) {
       if (event.target.files.length === 0) {
         return
       }
+      this.$set(this, 'showLink', false)
       let files = event.target.files
       let formData = new FormData()
 
@@ -51,24 +55,24 @@ export default {
         this.files.push(files[index])
       }
 
-      console.log(this.files)
+      // console.log(this.files)
 
       this.$set(this, 'formData', formData)
     },
 
-    startUpload () {
+    startUpload() {
       this.$set(this, 'uploadStarted', true)
       this.uploadData(this.formData)
     },
 
-    cancelUpload () {
+    cancelUpload() {
       if (this.uploadStarted) {
         source.cancel()
       }
       this.$set(this, 'uploadStarted', false)
     },
 
-    uploadData (formData) {
+    uploadData(formData) {
       if (this.formData === null) {
         return
       }
@@ -77,10 +81,19 @@ export default {
           cancelToken: source.token
         })
         .then(response => {
-          console.log(response)
+          // console.log(response)
           if (response.status >= 200 && response.status < 300) {
             this.updateFilesList(response.data)
             this.$set(this, 'formData', null)
+
+            axios.
+              get('/api?action=getFilesList&id=' + response.data[0]._id)
+              .then(response => {
+                this.$set(this, 'showLink', true)
+                this.filesUrl = response.data[0].url
+              })
+
+
           } else {
             alert('File not uploaded. Please check the file types' + response)
           }
@@ -93,9 +106,13 @@ export default {
         })
     },
 
-    updateFilesList (files) {
+    updateFilesList(files) {
       this.$emit('files-uploaded', files)
     }
+  },
+  mounted() {
+    console.log(this.showLink);
+    
   }
 }
 </script>
@@ -114,5 +131,9 @@ input {
   display: flex;
   flex-direction: column;
   align-items: flex-start
+}
+
+h3 {
+  margin-bottom: 5px;
 }
 </style>
