@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if ($_GET['action'] === 'downloadSelected') {
         if (!isset($_GET['url'])) {
-            echo json_encode(['error' => 'No url spec       ified']);
+            echo json_encode(['error' => 'No url specified']);
             exit;
         }
 
