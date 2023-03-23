@@ -34,13 +34,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         $encodedName = $_GET['encodedName'];
         $file = getFromDB('*', 'files', 'encodedName = "' . $encodedName . '"')[0];
+        $id = $file['id'];
 
         if (!$file) {
             echo json_encode(['error' => 'File not found']);
             exit;
         }
+        $fileFolder = getFromDB('*', 'files f INNER JOIN shareList s on f.share_list_id = s.id', "f.id = '$id'");
+        $fileFolder = $fileFolder[0]['url'];
 
-        $filePath = 'uploads/' . $file['name'];
+        $filePath = "uploads/$fileFolder/" . $file['name'];
 
         if (!file_exists($filePath)) {
             echo json_encode(['error' => 'File not found']);
@@ -77,12 +80,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
             exit;
         }
 
+        $fileFolder = getFromDB('*', 'files f INNER JOIN shareList s on f.share_list_id = s.id', "f.id = '$id'");
+        $fileFolder = $fileFolder[0]['url'];
+
 
         $pdo = getDB();
         $count = getFromDB('COUNT(*) AS count', 'files', 'name = "' . $file['name'] . '" AND id != ' . $file['id'])[0]['count'];
 
         if ($count == '0') {
-            $fileToDelete = 'uploads/' . $file['name'];
+            $fileToDelete = "uploads/$fileFolder/" . $file['name'];
 
             echo json_encode(['file path' => $fileToDelete]);
 
@@ -120,6 +126,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $savedModels = [];
     $newShareList = newShareList();
+    mkdir('uploads/'.$newShareList->url, 0777, true);
+    
+
 
     // Loop through each uploaded file
     foreach ($_FILES as $file) {
@@ -144,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Move the file to the uploads folder
-        move_uploaded_file($file['tmp_name'], 'uploads/' . $savedFileModel->name);
+        move_uploaded_file($file['tmp_name'], "uploads/$newShareList->url/" . $savedFileModel->name);
     }
 
     // If there were no errors, return the savedModels array as the response

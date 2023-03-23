@@ -98,22 +98,24 @@ function deleteFile($file_id)
     $stmt->bindParam(':id', $file_id);
     $stmt->execute();
 
+    $fileFolder = getFromDB('*', 'files f INNER JOIN shareList s on f.share_list_id = s.id', "f.id = '$file_id'");
+    $fileFolder = $fileFolder[0]['url'];
 
-    // Check if there are other records using this file
-    $stmt = $pdo->prepare('SELECT COUNT(*) AS count FROM files WHERE name = :name AND id != :id');
-    $stmt->bindParam(':name', $file['name']);
-    $stmt->bindParam(':id', $file['id']);
-    $stmt->execute();
-    $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+    // // Check if there are other records using this file
+    // $stmt = $pdo->prepare('SELECT COUNT(*) AS count FROM files WHERE name = :name AND id != :id');
+    // $stmt->bindParam(':name', $file['name']);
+    // $stmt->bindParam(':id', $file['id']);
+    // $stmt->execute();
+    // $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
     // Delete file record from the database if no other records are using this file
-    if ($count === 0) {
-        // Delete file from the filesystem
-        $fileLocation = __DIR__ . '/../uploads/' . $file['name'];
-        if (file_exists($fileLocation)) {
-            unlink($fileLocation);
-        }
+    // if ($count === 0) {
+    // Delete file from the filesystem
+    $fileLocation = __DIR__ . "/../uploads/$fileFolder/" . $file['name'];
+    if (file_exists($fileLocation)) {
+        unlink($fileLocation);
     }
+    // }
 
     return true;
 }
