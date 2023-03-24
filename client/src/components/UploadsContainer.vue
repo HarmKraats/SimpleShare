@@ -92,8 +92,6 @@ export default {
                 this.$set(this, 'showLink', true)
                 this.filesUrl = response.data[0].url
               })
-
-
           } else {
             alert('File not uploaded. Please check the file types' + response)
           }

@@ -18,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if ($_GET['action'] === 'getFilesList') {
         $id = $_GET['id'];
-        $query = 'SELECT s.url FROM files f INNER JOIN sharelist s ON f.share_list_id = s.id WHERE f.id = 463';
         $result = getFromDB('*', 'files f INNER JOIN sharelist s ON f.share_list_id = s.id', "f.id = $id");
 
         echo json_encode($result);
@@ -65,9 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             exit;
         }
 
+        
         $url = $_GET['url'];
         $files = getFromDB('*', 'files f INNER JOIN shareList s on f.share_list_id = s.id', "s.url = '$url'",true);
         $fileFolder = $files[0]['url'];
+
 
         $zip = new ZipArchive();
         $zipName = "uploads/$fileFolder/$fileFolder.zip";
