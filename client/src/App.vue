@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import FooterContainer from '@/includes/Footer'
-import HeaderContainer from '@/includes/header'
+import FooterContainer from './includes/Footer'
+import HeaderContainer from './includes/header'
 
 export default {
   name: 'App',

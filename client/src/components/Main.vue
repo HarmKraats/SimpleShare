@@ -13,8 +13,8 @@
 
 <script>
 // import axios from "axios";
-import UploadedFiles from '@/components/UploadedFilesList'
-import UploadsContainer from '@/components/UploadsContainer'
+import UploadedFiles from './UploadedFilesList'
+import UploadsContainer from './UploadsContainer'
 
 export default {
   name: 'Main',
