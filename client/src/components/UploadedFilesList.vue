@@ -30,7 +30,7 @@ export default {
   methods: {
     fetchFiles() {
       axios
-        .get('/api?action=getFiles')
+        .get('https://api.simpleshare.harmvandekraats.nl/api.php?action=getFiles')
         .then(response => {
           // console.log(response.data)
           this.$set(this, 'files', response.data)
@@ -51,7 +51,7 @@ export default {
 
     deleteFile(file) {
       if (confirm('Are you sure you want to delete this file?')) {
-        axios.delete('/api?action=deleteFile&id=' + file.id)
+        axios.delete('https://api.simpleshare.harmvandekraats.nl/api.php?action=deleteFile&id=' + file.id)
           .then((response) => {
             let fileIndex = this.files.indexOf(file)
             this.files.splice(fileIndex, 1)

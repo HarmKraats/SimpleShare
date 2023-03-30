@@ -48,7 +48,7 @@ export default {
         },
         downloadAll() {
             this.downloadStarted = true;
-            axios.get('/api?action=downloadSelected&url=' + this.url, { responseType: 'blob' })
+            axios.get('https://api.simpleshare.harmvandekraats.nl/api.php?action=downloadSelected&url=' + this.url, { responseType: 'blob' })
                 .then(response => {
                     console.log(response);
                     const url = URL.createObjectURL(new Blob([response.data]));

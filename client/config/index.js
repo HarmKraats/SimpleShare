@@ -10,12 +10,12 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      '/api': 'http://localhost/4-leerjaar-3/tests/1-SimpleShare/SimpleShare/new-server/api.php',
-      '/files': 'http://localhost/4-leerjaar-3/tests/1-SimpleShare/SimpleShare/new-server/models/getFilesList.php',
-      // '/api': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/api.php',
-      // '/files': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/models/getFilesList.php',
-    },
+    // proxyTable: {
+    //   '/api': 'http://localhost/4-leerjaar-3/tests/1-SimpleShare/SimpleShare/new-server/api.php',
+    //   '/files': 'http://localhost/4-leerjaar-3/tests/1-SimpleShare/SimpleShare/new-server/models/getFilesList.php',
+    //   // '/api': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/api.php',
+    //   // '/files': 'http://localhost/4-leerjaar-3/W3%20-%20SimpleShare/Application/new-server/models/getFilesList.php',
+    // },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

@@ -32,7 +32,7 @@ export default {
     return {
       uploadStarted: false,
       uploadName: 'files',
-      uploadUrl: '/api?action=uploadFile',
+      uploadUrl: 'https://api.simpleshare.harmvandekraats.nl/api.php?action=uploadFile',
       formData: null,
       files: [],
       filesUrl: '',
@@ -87,7 +87,7 @@ export default {
             this.$set(this, 'formData', null)
 
             axios.
-              get('/api?action=getFilesList&id=' + response.data[0]._id)
+              get('https://api.simpleshare.harmvandekraats.nl/api.php?action=getFilesList&id=' + response.data[0]._id)
               .then(response => {
                 this.$set(this, 'showLink', true)
                 this.filesUrl = response.data[0].url
